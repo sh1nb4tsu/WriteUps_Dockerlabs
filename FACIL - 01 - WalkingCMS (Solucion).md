@@ -146,7 +146,7 @@ Vale, finalizado el tratamiento de la TTY, pasaremos a la escalada de privilegio
 ```
 bash: sudo: command not found
 ```
-Como se ve, no se puede continuar por ahi. Es momento ahora de probar otro tipo de escalada de privilegios con el comando: "find / -perm -4000 2>/dev/null":
+Como se ve, no se puede continuar por ahi. Es hora de probar otro tipo de escalada de privilegios con el comando: "find / -perm -4000 2>/dev/null"
 ```
 find / -perm -4000 2>/dev/null
 
