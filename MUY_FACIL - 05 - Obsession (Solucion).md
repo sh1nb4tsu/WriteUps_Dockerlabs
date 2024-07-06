@@ -60,7 +60,7 @@ Y obtenemos en este caso la contraseña:
 ```
 Es momento entonces de acceder al puerto 22 (SSH), con estas credenciales:
 ```
-ssh-keygen -f '/root/.ssh/known_hosts' -R '172.17.0.2'
+ssh russoski@172.17.0.2
 ```
 Y tras escribir "yes" en la primera pregunta e introducir la contraseña obtenida con HYDRA cuando nos piden el password, ya estariamos dentro.
 ```
