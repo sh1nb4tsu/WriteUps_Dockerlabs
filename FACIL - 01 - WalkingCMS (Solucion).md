@@ -86,6 +86,7 @@ Y nos encuentra la contraseña "love", como se puede ver a continuacion:
  | Username: mario, Password: love
 ```
 **NOTA: Antes de continuar, hay que decir que al usar WPSCAN, se pone la ruta donde se encuentra el panel de Login PERO sin el "wp-login.php" (OJO CON ESTO !! ES MUY IMPORTANTE)**
+
 Una vez encontrada la contraseña y aclarado lo anterior, pasamos a introducir las credenciales en el panel de login, lo que nos da acceso al panel de control de Wordpress del usuario "mario".
 Bien, ahora nos interesaria inyectar codigo malicioso en ".php" pero no se observa ningun apartado donde poder subir algun archivo, por lo que otra alternativa es intentar inyectar el codigo malicioso directamente.
 Lo primero que haremos sera abrir una terminal y  crear directamente el codigo malicioso con "msfvenom". Vamos a intentar obtener una reverse, por lo que usaremos:
