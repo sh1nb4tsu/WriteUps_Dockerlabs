@@ -99,10 +99,8 @@ En este panel de control seleccionaremos en el menu de la izquierda la opcion "A
 Perfecto, ahora es momento de inyectar nuestro codigo. Para ello, en la parte de la derecha, veremos un archivo que se llama "functions.php", por ejemplo.
 Lo que haremos es simplemente abrir ese archivo y borrar todo su contenido, sustituyendolo por nuestro codigo malicioso.
 Antes de continuar y grabar el archivo, abriremos DOS ventanas de la terminal:
-
 	1) Una la pondremos a la escucha por el puerto 443 (el del codigo malicioso).
 	2) La segunda, la pondremos a la escucha por el puerto 444, por ejemplo.
- 
 ¿Y por que hacemos esto? Lo explico:
 Cuando se hace un "payload" o codigo malicioso con "msfvenom" en PHP, normalmente al de unos segundos/minutos nos expulsa de la maquina, por lo que es conveniente siempre estabilizar esa conexion que obtenemos con el "payload".
 La forma mas sencilla de estabilizarla es abrir una segunda terminal (como acabamos de hacer) e ir a la pagina "revshells.com".
