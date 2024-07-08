@@ -1,5 +1,5 @@
 Lo primero que tenemos que hacer, es ir a la pagina de "dockerlabs.es" y bajarnos la maquina "BorazuwarahCTF".
-Una vez hecho , descomprimimos el archivo, e inicializamos la maquina con el comando:
+Una vez hecho, descomprimimos el archivo, e inicializamos la maquina con el comando:
 ```
 bash auto_deploy.sh borazuwarahctf.tar
 ```
