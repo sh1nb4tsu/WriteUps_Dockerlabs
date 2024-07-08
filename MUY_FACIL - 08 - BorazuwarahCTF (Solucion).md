@@ -23,9 +23,12 @@ Enter passphrase:
 wrote extracted data to "secreto.txt"
 ```
 
-**NOTA: Para ocultar un archivo llamado por ejemplo "archivo.txt" en una imagen "imagen.jpg" escribiriamos: 
+**NOTA: Para ocultar un archivo llamado por ejemplo "archivo.txt" en una imagen "imagen.jpg" escribiriamos:
+
 	"steghide embed -cf imagen.jpg -ef archivo.txt"
-Por su parte, si lo que queremos es extraer el archivo oculto, pondriamos: 
+
+Por su parte, si lo que queremos es extraer el archivo oculto, pondriamos:
+
 	"steghide extract -sf imagen.jpg**
 
 Bueno, y ahora, volviendo a la maquina, si hacemos un "cat" sobre el archivo "secreto.txt", nos muestra:
@@ -109,7 +112,7 @@ root@ccab7e55cb75:/home/borazuwarah# whoami
 root
 root@ccab7e55cb75:/home/borazuwarah#
 ```
-Y listo, tal y como se puede observar, al escribir "whoami" se ve que el acceso como "root" ha sido obtenido. Con esto la maquina estaria hecha.
+Y listo, al escribir "whoami" se ve que el acceso como "root" ha sido obtenido. Con esto la maquina estaria hecha.
 
 
 
