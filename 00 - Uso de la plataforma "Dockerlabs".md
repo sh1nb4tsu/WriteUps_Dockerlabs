@@ -16,7 +16,7 @@ sudo bash auto_deploy.sh NOMBREMAQUINA.tar
 ##### COMO ELIMINAR LAS MAQUINAS
 Para eliminarlas, es sencillo. Una vez hayamos terminado con el laboratorio, simplemente tendriamos que pulsar "CONTROL + C" y todo el laboratorio se eliminara del sistema.
 ##### SOLUCIÓN DE ERRORES
-Es posible que en algunos casos puntuales se pueda experimentar algun error. Es por ello que hay una serie de comandos que puede que solucionen la mayoría de ellos:
+Es posible que en algunos casos puntuales se pueda experimentar algun error. No obstante, hay una serie de comandos que puede que solucionen la mayoría de dichos errores:
 ```
 	1- sudo systemctl restart docker
 	2- sudo docker stop $(docker ps -q)
