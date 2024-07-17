@@ -1,6 +1,6 @@
 Lo primero de todo, es dar las gracias a Mario (Maalfer en Github), creador de esta plataforma tan maravillosa llamada Dockerlabs.
 
-Yendo directos al grano, para que las maquina de DockerLabs puedan funcionar, Docker debe estar instalado en tu sistema. Para ello, usaremos el comando:
+Yendo directos al grano, para que las maquinas de DockerLabs puedan funcionar, Docker debe estar instalado en tu sistema. Para ello, usaremos el comando:
 ```
 sudo apt install docker.io
 ```
