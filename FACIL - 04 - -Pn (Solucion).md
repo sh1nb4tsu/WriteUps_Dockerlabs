@@ -18,12 +18,19 @@ MAC Address: 02:42:AC:11:00:02 (Unknown)
 
 ```
 Vamos pues a acceder al puerto 8080, por lo que vamos a poner la IP de la maquina victima seguida del puerto en el navegador Web y vemos que sale la pagina por defecto del Apache Tomcat.
+
 Se puede observar tambien que hay una parte, en la linea del "tomcat9-admin" donde pone "manager webapp" donde pincharemos y se nos abrira un panel Login.
+
 Hay que entender ahora una cosa y es que, por defecto, Apache Tomcat ya viene con unas credenciales por defecto.
+
 Para obtenerlas, buscamos en Google "hacktricks apache tomcat default credentials" y en la propia Web de "hacktricks" iremos al siguiente enlace:
+
 	https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/tomcat
-Una vez estemos en esta pagina, iremos a la seccion donde pone "Default credentials" donde se veran varias posibles contraseñas, las cuales habria que ir probando una por una
+
+Una vez estemos en esta pagina, iremos a la seccion donde pone "Default credentials" donde se veran varias posibles contraseñas, las cuales habria que ir probando una por una.
+
 Un truquito, aunque no siempre funciona, seria darle a "Cancel" en el panel de Login, y al darnos el error 401 de "No autorizado" suelen dar las credenciales.
+
 Pero como como acabo de decir, NO siempre funciona.
 ```
 401 Unauthorized
@@ -55,7 +62,7 @@ Ahora subimos los dos y nos apareceran en la pantalla de control del Tomcat Web 
 ```
 /reverse1 	None specified 	  	true 	0 	 Start with idle ≥  minutes 
 /reverse2 	None specified 	  	true 	0 	 Start with idle ≥  minutes 
-```
+ddddddddddddddd```
 Perfecto, ya tenemos los dos archivos subidos. Lo siguiente, COMO SIEMPRE, es ponernos a la escucha con NETCAT usando el comando:
 ```
 nc -nlvp 443
