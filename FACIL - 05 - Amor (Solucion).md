@@ -14,7 +14,8 @@ Discovered open port 80/tcp on 172.17.0.2
 ```
 Es momento de ver si podemos acceder o conseguir informacion a traves del puerto 80, por lo que ponemos la IP en el navegador para ver que obtenemos.
 Entre otras cosas, vemos que la pagina tiene varios "anuncios", entre los que se pueden ver varios nombres de usuarios como "Juan" (el cual parece que ha sido despedido) y Carlota (empleada del departamento de ciberseguridad).
-Entonces, lo primero que vamos a hacer es con HYDRA intentar encontrar las credenciales tanto de Juan (no sabemos si aun siguen activas), como las de Carlota, empezando por eta ultima, ya que es mas probable que siga en la empresa:
+
+Entonces, lo primero que vamos a hacer es con HYDRA intentar encontrar las credenciales tanto de Juan (no sabemos si aun siguen activas), como las de Carlota, empezando por esta ultima, ya que es mas probable que siga en la empresa:
 ```
 hydra -l carlota -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2
 ```
@@ -54,7 +55,10 @@ carlota@83319e9890ed:~/Desktop/fotos/vacaciones$ pwd
 carlota@83319e9890ed:~/Desktop/fotos/vacaciones$ 
 
 ```
-Nuestro siguiente paso seria conseguir esta imagen, trayendonosla a nuestro equipo para poder analizarla (posible esteganografia ??). Hay varias formas de obtener la foto, bien montando un servidor con Python (habria que comprobar si la maquina victima lo tiene instalado), bien con "scp" (Secure Copy Protocol). En este caso, para poder hacer todo desde nuestra maquina atacante, usaremos "scp", por ejemplo. Escribimos:
+Nuestro siguiente paso seria conseguir esta imagen, trayendonosla a nuestro equipo para poder analizarla (posible esteganografia ??).
+
+Hay varias formas de obtener la foto, bien montando un servidor con Python (habria que comprobar si la maquina victima lo tiene instalado), bien con "scp" (Secure Copy Protocol). En este caso, para poder hacer todo desde nuestra maquina atacante, usaremos "scp", por ejemplo.
+Para ello escribimos:
 ```
 scp carlota@172.17.0.2:/home/carlota/Desktop/fotos/vacaciones/imagen.jpg imagen_victima.jpg
 
@@ -63,12 +67,16 @@ carlota@172.17.0.2's password:
 imagen.jpg                                      100%   51KB  26.7MB/s   00:00
 ```
 Como se puede observar, tras poner el password, obtenemos la imagen.
-***NOTA:
+
+NOTA:
 Tambien me he dado cuenta que se podria hacer con Python porque la maquina victima lo tiene instalado. Para ello, deberiamos haber escrito:
 ```
 python3 -m http.server 1111    <=== Pongo este puerto porque el 80 esta en uso
 ```
-y bien desde la propia pagina web 172.17.0.2:1111 como con "wget" podemos obtener la imagen.***
+y bien desde la propia pagina web 172.17.0.2:1111 como con "wget" podemos obtener la imagen.
+
+FIN DE LA NOTA
+
 Continuando con la imagen, vemos que es una simple imagen de una boda.
 Lo primero de todo, sera usar "exiftool" para comprobar los metadatos:
 ```
@@ -106,6 +114,7 @@ stehide extract -sf imagen_victima.jpg
 ```
 A la hora de extraer el contenido, pide una contraseña y tras probar varias (carlota, imagen, admin, etc...) me he dado cuenta que simplemente dandole al "Enter" extrae el archivo O_o !!
 Sin mas... prefiero no preguntar.
+
 En fin, volviendo al tema, vemos que contiene un archivo llamado "secret.txt" al que tras hacerle un "cat", nos da una serie de caracteres en base 64.
 ```
 ZXNsYWNhc2FkZXBpbnlwb24=
