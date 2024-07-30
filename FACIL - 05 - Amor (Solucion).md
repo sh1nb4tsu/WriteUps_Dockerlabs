@@ -110,7 +110,7 @@ Megapixels                      : 0.392
 ```
 Nuestro siguiente paso, seria como he dicho antes, intentar ver si existe algun mensaje oculto mediante "esteganografia", por lo que usaremos "steghide":
 ```
-stehide extract -sf imagen_victima.jpg
+steghide extract -sf imagen_victima.jpg
 ```
 A la hora de extraer el contenido, pide una contraseña y tras probar varias (carlota, imagen, admin, etc...) me he dado cuenta que simplemente dandole al "Enter" extrae el archivo O_o !!
 Sin mas... prefiero no preguntar.
