@@ -5,7 +5,7 @@ sudo bash auto_deploy.sh pn.tar
 ```
 Lo primero de todo, tras desplegarse la maquina, es hacer un NMAP. No necesitamos hacer un ARP-SCAN (o NETDISCOVER), porque ya sabemos la IP de la maquina victima.
 ```
-nmap -p- --open -sCV -sS --min-rate 5000 172.18.0.2 -n -Pn -vvv
+nmap -p- --open -sCV -sS --min-rate 5000 172.17.0.2 -n -Pn -vvv
 ```
 Una vez terminado, vemos que tiene  abierto el puerto 8080 donde corre un Tomcat.
 ```
