@@ -50,6 +50,7 @@ jenkis_LFI.py: error: the following arguments are required: -u/--url
 ❯ python3 jenkis_LFI.py -u http://172.17.0.2:8080/
 ```
 Y en esta ocasion todo es correcto, preguntandonos que fichero es el que queremos descargar.
+
 En este caso, lo que hemos escrito ha sido "/etc/passwd", para poder encontrar los usuarios de esta maquina:
 ```
 Press Ctrl+C to exit
