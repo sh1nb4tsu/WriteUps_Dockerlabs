@@ -7,7 +7,7 @@ Lo primero de todo, tras desplegarse la maquina, es hacer un NMAP. No necesitamo
 ```
 nmap -p- --open -sCV -sS --min-rate 5000 172.17.0.2 -n -Pn -vvv
 ```
-Una vez terminado, vemos que tiene dos puertos abiertos: el 22 (SSH) y el 80 (HTML)
+Una vez terminado, vemos que tiene dos puertos abiertos: el 22 (SSH) y el 80 (HTTP)
 ```
 Discovered open port 22/tcp on 172.17.0.2
 Discovered open port 80/tcp on 172.17.0.2
