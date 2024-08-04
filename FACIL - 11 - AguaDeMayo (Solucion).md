@@ -153,7 +153,7 @@ Si nos fijamos hay un comando que es "!" que nos permite ejecutar una "shell com
 ```
 172.17.0.0/16 > 172.17.0.2  » ! chmod u+s /bin/bash
 ```
-Una vez ejecutado, salimos y ejecutamos el comando "bash -p", lo cual, tal y como se puede ver abajo, nos da un prompt con e usuario "root":
+Una vez ejecutado, salimos y ejecutamos el comando "bash -p", lo cual, tal y como se puede ver abajo, nos da un prompt con el usuario "root":
 ```
 172.17.0.0/16 > 172.17.0.2  » exit
 
