@@ -13,13 +13,15 @@ Discovered open port 22/tcp on 172.17.0.2
 Discovered open port 80/tcp on 172.17.0.2
 ```
 Como no tenemos ni usuario ni contraseña aun para atacar el puerto 22, vamos a probar poniendo la direccion IP en el navegador.
+
 Sin embargo, aparece la tipica pagina de Apache, por lo que vamos a pulsar "CTRL + U" para ver si hay algo interesante en el codigo fuente y, tras bajar y bajar, vemos un "texto" comentado:
 ```
 <!--
 ++++++++++[>++++++++++>++++++++++>++++++++++>++++++++++>++++++++++>++++++++++>++++++++++++>++++++++++>+++++++++++>++++++++++++>++++++++++>++++++++++++>++++++++++>+++++++++++>+++++++++++>+>+<<<<<<<<<<<<<<<<<-]>--.>+.>--.>+.>---.>+++.>---.>---.>+++.>---.>+..>-----..>---.>.>+.>+++.>.
 -->
 ```
-Tras buscar por internet, parece ser que es un tipo de codigo que pertenece a "Brainfuck", por lo que vamos a buscar algun "decodificador" en Google.
+Despues de buscar por internet, parece ser que es un tipo de codigo que pertenece a "Brainfuck", por lo que vamos a buscar algun "decodificador" en Google.
+
 En mi caso, esta pagina: "https://www.dcode.fr/brainfuck-language" donde introducimos el texto anterior para ver que obtenemos y el resultado es este:
 ```
 bebeaguaqueessano
@@ -57,7 +59,7 @@ agua_ssh.jpg                 100%[==============================================
 
 2024-08-04 01:43:44 (2,11 GB/s) - «agua_ssh.jpg» guardado [50517/50517]
 ```
-Una vez descargada, la abrimos y vemos que no hay mas que una gota de agua. Nada relevante por lo que probaremos primero con la herramienta "exiftool" a ver si hay algo en los metadatos:
+Una vez descargada, la abrimos y vemos que solo es una imagen sin relevancia, por lo que probaremos primero con la herramienta "exiftool" a ver si hay algo en los metadatos:
 ```
 exiftool agua_ssh.jpg
 
@@ -93,8 +95,11 @@ steghide extract -sf agua_ssh.jpg
 Anotar salvoconducto: 
 steghide: ¡no pude extraer ningún dato con ese salvoconducto!
 ```
-Pero tampoco encontramos nada tal y como acabamos de ver. Asi que vamos a tirar un poco de fuerza bruta con HYDRA y vamos a ver si usando la palabra "bebeaguaqueessano" podemos conseguir bien un usuario o bien una contraseña.
-Tras perder MUCHO tiempo y no obtener nada, he tenido que mirar una guia y resulta que el usuario era "agua". WTF !! En fin, volviendo a la maquina y ya teniendo el usuario y la contraseña, accedemos via SSH:
+Pero tampoco encontramos nada, tal y como acabamos de ver. Asi que vamos a tirar un poco de fuerza bruta con HYDRA y vamos a ver si usando la palabra "bebeaguaqueessano" podemos conseguir bien un usuario o bien una contraseña.
+
+Tras perder MUCHO tiempo y no obtener nada, he tenido que mirar una guia y resulta que el usuario era "agua". WTF ^_^U!!
+
+En fin, volviendo a la maquina y ya teniendo el usuario y la contraseña, accedemos via SSH:
 ```
 ssh agua@172.17.0.2
 ```
