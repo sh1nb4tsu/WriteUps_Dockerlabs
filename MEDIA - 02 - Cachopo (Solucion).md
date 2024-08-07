@@ -13,20 +13,35 @@ Discovered open port 80/tcp on 172.17.0.2
 Discovered open port 22/tcp on 172.17.0.2
 ```
 Como no tenemos datos para entrar mediante SSH, vamos a abrir la pagina poniendo su IP en el navegador.
-Una vez hecho esto, vemos que hay una pagina web de una especie de restaurante a punto de abrir llamado "Cachopazos Pingu". Hay varios menus pero no parece que haya nada interesante. Casi al final de la pagina, vemos un panel para hacer una reserva y poco mas.
+
+Una vez hecho esto, vemos que hay una pagina web de una especie de restaurante a punto de abrir llamado "Cachopazos Pingu".
+
+Hay varios menus pero no parece que haya nada interesante.
+
+Casi al final de la pagina, vemos un panel para hacer una reserva y poco mas.
+
 Vamos primero a mirar el codigo fuente por si hubiera algo "interesante" oculto, pulsando "CTRL + U".
+
 Tras inspeccionar el codigo fuente, no se ve nada con lo que podamos trabajar, asi que vamos a probar a hacer un poco de FUZZING WEB con "gobuster", por ejemplo:
 ```
 gobuster dir -u http://172.17.0.2/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-lowercase-2.3-medium.txt -x txt,php,asp,aspx,jsp,html -t 20
 ```
 Tras esperar un buen rato, vemos que no podemos seguir por aqui.
+
 Vamos a probar entonces a usar "BURPSUITE" intentando capturar la peticion del panel reservas que aparece en la pagina, a ver si hay suerte.
+
 Para ello, abrimos el propio BURPSUITE y vamos a la pestaña superior donde pone "Proxy".
+
 Una vez en esta pestaña, activamos la captura de peticion pinchando en la pestaña donde pone "Intercept is off", para que cambie a "Intercept is on".
+
 Ahora tenemos dos opciones:
-	1) En el navegador (en mi caso Firefox), vamos a "Settings/NetworkSettings" y elegimos la opcion "Manual proxy configuration" donde colocaremos la IP local 127.0.0.1 y el puerto 8080. Ahora solo nos quedaria darle a aceptar.
-	2) La otra opcion (la que voy a  hacer yo), es instalar una extension llamada "FoxyProxy", configurarla (Options/Proxies) escribiendo Hotsname 127.0.0.1, Port 8080 y  dandole un nombre (por ejemplo "Burp"). Ahora solo seria activarla.
+
+ 1) En el navegador (en mi caso Firefox), vamos a "Settings/NetworkSettings" y elegimos la opcion "Manual proxy configuration" donde colocaremos la IP local 127.0.0.1 y el puerto 8080. Ahora solo nos quedaria darle a aceptar.
+    
+ 2) La otra opcion (la que voy a  hacer yo), es instalar una extension llamada "FoxyProxy", configurarla (Options/Proxies) escribiendo Hostname 127.0.0.1, Port 8080 y  dandole un nombre (por ejemplo "Burp"). Ahora solo seria activarla.
+ 
 Elijamos lo que elijamos, ya tendriamos el proxy configurado, por lo que escribiriamos en el panel de reserva de la pagina los datos para ver como se recogen en el servidor, mediante BURPSUITE.
+
 Una vez hecha la captura con BURPSUITE, nos lo pasamos todo al "Repeater" (click segundo boton ==> Send to Repeater) quedandonos:
 ```
 POST /submitTemplate HTTP/1.1
@@ -55,11 +70,13 @@ Connection: close
 Error: Incorrect padding
 ```
 Parece ser que lo manda bien, pero hay un problema y nos da un error: "Incorrect Padding".
+
 Si probamos a cambiar en el panel izquierdo el "userInput" por letras y numeros (por ejemplo, "123prueba", nos devolveria el error:
 ```
 Error: Invalid base64-encoded string: number of data characters (9) cannot be 1 more than a multiple of 4
 ```
 Vale, hemos recibido 2 errores diferentes con dos "userInput" diferentes, asi que si buscamos en Google ambos errores, vemos que tienen relacion con la codificacion en "base64", por lo que vamos a intentar enviar el comando "whoami", codificado en "base64" para ver que ocurre.
+
 Para ello, primero iremos a la terminal de nuestra maquina atacante y escribiremos:
 ```
 echo "whoami" | base64
@@ -111,6 +128,7 @@ sshd:x:101:65534::/run/sshd:/usr/sbin/nologin
 cachopin:x:1001:1001::/home/cachopin:/bin/bash
 ```
 Tal y como se puede ver, parece que solo hay un usuario llamado "cachopin", justo lo que nos aparecio al principio cuando escribimos "whoami".
+
 Vale, perfecto. Es momento de usar HYDRA para ver si podemos conseguir la contraseña y acceder a la maquina mediante SSH. Para ello escribimos:
 ```
 hydra -l cachopin -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2
@@ -126,6 +144,7 @@ Es momento ahora de acceder via SSH:
 ssh cachopin@172.17.0.2
 ```
 Decimos "yes" a las fingerprints y etemos la contraseña "simple" obtenida con HYDRA.
+
 Con esto, ya estariamos dentro:
 ```
 cachopin@c7a551002841:~$ whoami
@@ -134,7 +153,9 @@ cachopin
 cachopin@c7a551002841:~$
 ```
 Bien vamos a probar a hacer una escalada de privilegios con "sudo -l", "suid", etc.. pero tras probar, vemos que no hay forma (o al menos, eso parece).
+
 Es momento de intentar navegar por los directorios para ver si podemos conseguir mas informacion o alguna pista que nos pueda ayudar con la escalada.
+
 Haciendo un "ls -la", vemos que hay un archivo llamado "entrypoint.sh", asi que le hacemos un "cat" para ver lo que contiene.
 ```
 cachopin@c7a551002841:~$ cat entrypoint.sh 
@@ -147,6 +168,7 @@ service ssh start
 exec su - cachopin -c "/home/cachopin/venv/bin/python /home/cachopin/app/app.py"
 ```
 Bueno, nos da informacion y nos dice que que en la carpeta "/home/cachopin/app/" hay un archivo llamado "app.py" asi que vamos a dicha carpeta, hacemos un "ls" y vemos que hay 3 directorios, aparte del archivo "app.py" que estabamos buscando.
+
 Aun asi, le hacemos un "cat" tambien para ver lo que contiene:
 ```
 cachopin@c7a551002841:~$ cd app
@@ -185,6 +207,7 @@ if __name__ == '__main__':
 cachopin@c7a551002841:~/app$
 ```
 Bueno, ya vemos que es el codigo que hace que la pagina codifique en "base64" el panel de reservas.
+
 Dejando esto de lado, seguimos investigando por la maquina y en concreto, en la carpeta "/app/" en la que estamos probamos con el resto a ver si obtenemos alguna pista mas:
 ```
 cachopin@c7a551002841:~/app$ ls
@@ -222,6 +245,7 @@ index.html
 cachopin@c7a551002841:~/app/templates$
 ```
 Perfecto. Tras investigar un poco, lo unico que nos podria dar algo de informacion seria el archivo "hash.lst que esta en la carpeta /app/com/personal/"
+
 Tal y como se puede observar, hay varios hashes SHA1, un tanto "extraños":
 ```
 $SHA1$d$GkLrWsB7LfJz1tqHBiPzuvM5yFb=
@@ -238,9 +262,12 @@ Using default input encoding: UTF-8
 No password hashes loaded (see FAQ)
 ```
 Pero vemos que no hay suerte. Pruebo con el 2do y el 3ro, con mismo resultado, asi que supongo que no funcionara.
+
 Como los hashes que hemos obtenido son algo raros, pruebo lo mismo pero quitando la primera parte del archivo: el "$ SHA1 $" pero seguimos igual.
+
 Tras pensar un rato como seguir (un rato largo ademas), vuelvo a "dockerlabs.es" y al elegir la maquina recuerdo que su creador "Patxasec" tiene pagina en "github".
-La visito y veo que uno de sus repositorios es, curiosamente, uno llamado: "SHA_Decrypt" ("https://github.com/PatxaSec/SHA_Decrypt"), por lo que clono el repositorio y entro dentro de el.
+
+La visito y veo que uno de sus repositorios es, curiosamente, uno llamado: "SHA_Decrypt" ("https://github.com/PatxaSec/SHA_Decrypt"), por lo que clono el repositorio y entro dentro de la carpeta.
 ```
 git clone https://github.com/PatxaSec/SHA_Decrypt.git
 
@@ -270,6 +297,7 @@ Y ahora si, ejecutamos el "sha2text.py":
 python3 sha2text.py 'd' '$SHA1$d$GkLrWsB7LfJz1tqHBiPzuvM5yFb=' '/usr/share/wordlists/rockyou.txt'
 ```
 Vemos una barrita de porcentaje, asi que esperamos a que termine.
+
 Si embargo, con el primer hash de los cinco, recibimos el mensaje:
 ```
 Processing: 100%|█████████████████| 14344392/14344392 [00:28<00:00, 504324.82it/s]
